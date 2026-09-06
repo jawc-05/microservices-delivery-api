@@ -52,6 +52,15 @@ public class OrderService {
         return orderRepository.findAll(pageable);
     }
 
+    public Order updateStatus(Long orderId, OrderStatus newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + orderId));
+
+        order.setStatus(newStatus);
+
+        return orderRepository.save(order);
+    }
+
     public List<OrdersPerDayDTO> getOrdersPerDayReport() {
         return orderReportRepository.getOrdersPerDayReport();
     }
