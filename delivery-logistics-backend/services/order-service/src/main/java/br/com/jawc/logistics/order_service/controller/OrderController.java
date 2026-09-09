@@ -6,6 +6,7 @@ package br.com.jawc.logistics.order_service.controller;
 import br.com.jawc.logistics.order_service.domain.Order;
 import br.com.jawc.logistics.order_service.dto.OrderRequestDTO;
 import br.com.jawc.logistics.order_service.dto.OrderResponseDTO;
+import br.com.jawc.logistics.order_service.dto.OrderStatusRequestDTO;
 import br.com.jawc.logistics.order_service.dto.OrdersPerDayDTO;
 import br.com.jawc.logistics.order_service.feign.DeliveryClient;
 import br.com.jawc.logistics.order_service.service.OrderService;
@@ -104,5 +105,26 @@ public class OrderController {
     })
     public ResponseEntity<List<OrdersPerDayDTO>> getOrdersPerDay(){
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrdersPerDayReport());
+    }
+
+    //Utilizando PATCH ao invés de PUT devido a atualizar apenas um recurso/informação
+    @PatchMapping("/{id}/status")
+    @Operation(summary = "UPDATE the status from order")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "return the order with the new status"),
+            @ApiResponse(responseCode = "404", description = "the order wasnt found")
+    })
+    public ResponseEntity<OrderResponseDTO> updateOrderStatus(@PathVariable Long id, @RequestBody @Valid OrderStatusRequestDTO request){
+        Order orderUpdated = orderService.updateStatus(id, request.orderStatus());
+        var dto = new OrderResponseDTO(
+                orderUpdated.getId(),
+                orderUpdated.getRecipientEmail(),
+                orderUpdated.getRecipientName(),
+                orderUpdated.getTotalAmount(),
+                orderUpdated.getStatus(),
+                orderUpdated.getCreatedAt(),
+                orderUpdated.getCourierId()
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 }
