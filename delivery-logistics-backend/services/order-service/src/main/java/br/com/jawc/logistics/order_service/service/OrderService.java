@@ -7,6 +7,7 @@ import br.com.jawc.logistics.order_service.domain.Order;
 import br.com.jawc.logistics.order_service.domain.OrderStatus;
 import br.com.jawc.logistics.order_service.dto.CourierResponseDTO;
 import br.com.jawc.logistics.order_service.dto.OrdersPerDayDTO;
+import br.com.jawc.logistics.order_service.exception.OrderNotFoundException;
 import br.com.jawc.logistics.order_service.feign.DeliveryClient;
 import br.com.jawc.logistics.order_service.repository.IOrderRepository;
 import br.com.jawc.logistics.order_service.repository.OrderReportRepository;
