@@ -115,7 +115,7 @@ public class OrderController {
             @ApiResponse(responseCode = "404", description = "the order wasnt found")
     })
     public ResponseEntity<OrderResponseDTO> updateOrderStatus(@PathVariable Long id, @RequestBody @Valid OrderStatusRequestDTO request){
-        Order orderUpdated = orderService.updateStatus(id, request.orderStatus());
+        Order orderUpdated = orderService.updateStatus(id, request.status());
         var dto = new OrderResponseDTO(
                 orderUpdated.getId(),
                 orderUpdated.getRecipientEmail(),
