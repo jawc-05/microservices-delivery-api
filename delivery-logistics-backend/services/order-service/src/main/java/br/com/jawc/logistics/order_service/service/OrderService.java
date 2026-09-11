@@ -7,6 +7,7 @@ import br.com.jawc.logistics.order_service.domain.Order;
 import br.com.jawc.logistics.order_service.domain.OrderStatus;
 import br.com.jawc.logistics.order_service.dto.CourierResponseDTO;
 import br.com.jawc.logistics.order_service.dto.OrdersPerDayDTO;
+import br.com.jawc.logistics.order_service.exception.OrderNotFoundException;
 import br.com.jawc.logistics.order_service.feign.DeliveryClient;
 import br.com.jawc.logistics.order_service.repository.IOrderRepository;
 import br.com.jawc.logistics.order_service.repository.OrderReportRepository;
@@ -50,6 +51,15 @@ public class OrderService {
 
     public Page<Order> getAllOrders(Pageable pageable) {
         return orderRepository.findAll(pageable);
+    }
+
+    public Order updateStatus(Long orderId, OrderStatus newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException("Order not found with id: " + orderId));
+
+        order.setStatus(newStatus);
+
+        return orderRepository.save(order);
     }
 
     public List<OrdersPerDayDTO> getOrdersPerDayReport() {
